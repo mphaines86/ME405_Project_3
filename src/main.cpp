@@ -100,15 +100,16 @@ void loop() {
         reverse = 0;
     }
 
-    if (!still_pulsed)
-        //counter++;
-        //distance_array[counter%=NUMBER_OF_SAMPLES] = duration *0.034/2;
+    if (!still_pulsed) {
+        counter++;
+        distance_array[counter%=NUMBER_OF_SAMPLES] = duration *0.034/2;
         calculateDistance();
+    }
 
-    //uint32_t tmp[NUMBER_OF_SAMPLES];
-    //memcpy(&tmp[0], &distance_array[0] , NUMBER_OF_SAMPLES*sizeof(uint32_t));
-    //qsort(tmp, NUMBER_OF_SAMPLES, sizeof(uint32_t), uint32Compare);
-    // distance = tmp[NUMBER_OF_SAMPLES/2]
+    uint32_t tmp[NUMBER_OF_SAMPLES];
+    memcpy(&tmp[0], &distance_array[0] , NUMBER_OF_SAMPLES*sizeof(uint32_t));
+    qsort(tmp, NUMBER_OF_SAMPLES, sizeof(uint32_t), uint32Compare);
+    distance = tmp[NUMBER_OF_SAMPLES/2];
     if ((millis()%120) == 0) {
         Serial.println(distance);
         uint16_t distance_x = (uint16_t) (distance * cos(baseAngle * PI / 180));
@@ -135,7 +136,7 @@ ISR(PCINT2_vect){
     else if ((value == 0) && still_pulsed){
         duration = (uint32_t) (micros() - int_duration);
         still_pulsed = 0;
-        distance = (uint32_t) (duration * 0.034 / 2);
+        //distance = (uint32_t) (duration * 0.034 / 2);
     }
     //Serial.println(PIND & (1 << PINB7));
 }
